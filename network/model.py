@@ -6,6 +6,7 @@ import math
 import sys
 import os
 from tqdm import tqdm
+from p_tqdm import p_map
 
 #components
 class Embedder(nn.Module):
@@ -215,11 +216,14 @@ class Discriminator(nn.Module):
             print('Initializing Discriminator weights')
             if not os.path.isdir(self.path_to_Wi):
                 os.mkdir(self.path_to_Wi)
+            def process(i, path_to_Wi):
+                if not os.path.isfile(os.path.join(path_to_Wi, f'W_{i}.tar')):
+                     w_i = torch.rand(512, 1)
+                     torch.save({'W_i': w_i}, os.path.join(path_to_Wi, f'W_{i}.tar'))
+                return
+
             for i in tqdm(range(num_videos)):
-                if not os.path.isfile(self.path_to_Wi+'/W_'+str(i)+'/W_'+str(i)+'.tar'):
-                    w_i = torch.rand(512, 1)
-                    os.mkdir(self.path_to_Wi+'/W_'+str(i))
-                    torch.save({'W_i': w_i}, self.path_to_Wi+'/W_'+str(i)+'/W_'+str(i)+'.tar')
+                process(i, path_to_Wi)
         self.W_i = nn.Parameter(torch.randn(512, 32))
         self.w_0 = nn.Parameter(torch.randn(512,1))
         self.b = nn.Parameter(torch.randn(1))

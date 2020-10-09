@@ -18,6 +18,7 @@ from loss.loss_generator import *
 from network.blocks import *
 from network.model import *
 from tqdm import tqdm
+from p_tqdm import p_map
 
 from params.params import K, path_to_chkpt, path_to_backup, path_to_Wi, batch_size, path_to_preprocess, frame_shape
 
@@ -54,11 +55,14 @@ E.train(False)
 print('Initializing Discriminator weights')
 if not os.path.isdir(path_to_Wi):
     os.mkdir(path_to_Wi)
-for i in tqdm(range(num_vid)):
-    if not os.path.isfile(path_to_Wi+'/W_'+str(i)+'/W_'+str(i)+'.tar'):
-        w_i = torch.rand(512, 1)
-        os.mkdir(path_to_Wi+'/W_'+str(i))
-        torch.save({'W_i': w_i}, path_to_Wi+'/W_'+str(i)+'/W_'+str(i)+'.tar')
+
+def process(i, path_to_Wi):
+     if not os.path.isfile(os.path.join(path_to_Wi, f'W_{i}.tar')):
+         w_i = torch.rand(512, 1)
+         torch.save({'W_i': w_i}, os.path.join(path_to_Wi, f'W_{i}.tar'))
+    return
+
+p_map(process, range(num_vid), [path_to_Wi] * num_vid)
 
 """Training"""
 batch_start = datetime.now()
@@ -88,5 +92,5 @@ with torch.no_grad():
 
 
         for enum, idx in enumerate(i):
-            torch.save({'W_i': e_hat[enum,:].unsqueeze(0)}, path_to_Wi+'/W_'+str(idx.item())+'/W_'+str(idx.item())+'.tar')
+            torch.save({'W_i': e_hat[enum,:].unsqueeze(0)}, os.path.join(path_to_Wi, f'W_{idx.item()}.tar'))
 

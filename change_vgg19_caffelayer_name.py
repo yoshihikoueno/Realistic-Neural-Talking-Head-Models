@@ -4,6 +4,7 @@ from torchvision import models
 from params.params import VGG19_caffe_weight_path
 
 sd = torch.load(VGG19_caffe_weight_path)
+import pdb; pdb.set_trace()
 sd['classifier.0.weight'] = sd['classifier.1.weight']
 sd['classifier.0.bias'] = sd['classifier.1.bias']
 del sd['classifier.1.weight']

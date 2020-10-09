@@ -8,3 +8,4 @@ run apt install -y python3-caffe-cuda
 run apt install -y vim
 run apt install -y libgl1-mesa-glx
 run apt install -y libglib2.0-0
+run pip install p_tqdm

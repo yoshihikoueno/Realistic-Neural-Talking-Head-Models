@@ -149,7 +149,7 @@ class ResBlockUp(nn.Module):
         self.out_channel = out_channel
         
         if is_bilinear:
-            self.upsample = nn.Upsample(size = out_size, scale_factor=scale, mode='bilinear')
+            self.upsample = nn.Upsample(size = out_size, scale_factor=scale, mode='bilinear', align_corners=False)
         else:
             self.upsample = nn.Upsample(size = out_size, scale_factor=scale)
         self.relu = nn.LeakyReLU(inplace = False)

@@ -91,10 +91,10 @@ class PreprocessDataset(Dataset):
         
         if self.path_to_Wi is not None:
             try:
-                W_i = torch.load(self.path_to_Wi+'/W_'+str(vid_idx)+'/W_'+str(vid_idx)+'.tar',
+                W_i = torch.load(self.path_to_Wi+'/W_'+str(vid_idx)+'.tar',
                             map_location='cpu')['W_i'].requires_grad_(False)
             except:
-                print("\n\nerror loading: ", self.path_to_Wi+'/W_'+str(vid_idx)+'/W_'+str(vid_idx)+'.tar')
+                print("\n\nerror loading: ", self.path_to_Wi+'/W_'+str(vid_idx)+'.tar')
                 W_i = torch.rand((512,1))
         else:
             W_i = None
